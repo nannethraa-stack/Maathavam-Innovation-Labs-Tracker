@@ -307,7 +307,7 @@ function ConceptForm({ initial, onSave, onCancel }) {
       <div style={{ display: "flex", gap: 10, marginTop: 20, justifyContent: "flex-end" }}>
         <button onClick={onCancel} style={btnGhost}>Cancel</button>
         <button
-          onClick={() => name.trim() && onSave({ name: name.trim(), description, domain, patentStatus, plannedOrgForPOC, status, eta, requiresSensor, artifacts })}
+          onClick={async () => { if (name.trim()) await onSave({ name: name.trim(), description, domain, patentStatus, plannedOrgForPOC, status, eta, requiresSensor, artifacts }); }}
           style={btnPrimary}
         >{initial ? "Save changes" : "Add concept"}</button>
       </div>
@@ -372,9 +372,9 @@ function ExpenseForm({ initial, concepts, defaultConceptId, onSave, onCancel }) 
       <div style={{ display: "flex", gap: 10, marginTop: 20, justifyContent: "flex-end" }}>
         <button onClick={onCancel} style={btnGhost}>Cancel</button>
         <button
-          onClick={() => {
+          onClick={async () => {
             if (!description.trim() || !amount || !conceptId) return;
-            onSave({ conceptId, description: description.trim(), amount: Number(amount), source, paidBy: paidBy.trim(), date });
+            await onSave({ conceptId, description: description.trim(), amount: Number(amount), source, paidBy: paidBy.trim(), date });
           }}
           style={btnPrimary}
         >{initial ? "Save changes" : "Add expense"}</button>
@@ -396,35 +396,20 @@ const btnGhost = {
 
 export default function App() {
   const [tab, setTab] = useState("dashboard");
-  const [concepts, setConcepts] = useState(() => {
-    try {
-      const saved = localStorage.getItem("concepts");
-      if (saved && saved.length < 5 * 1024 * 1024) return JSON.parse(saved);
-      localStorage.removeItem("concepts");
-    } catch {}
-    return seedConcepts;
-  });
-  const [expenses, setExpenses] = useState(() => {
-    try {
-      const saved = localStorage.getItem("expenses");
-      if (saved && saved.length < 5 * 1024 * 1024) return JSON.parse(saved);
-      localStorage.removeItem("expenses");
-    } catch {}
-    return seedExpenses;
-  });
+  const [concepts, setConcepts] = useState([]);
+  const [expenses, setExpenses] = useState([]);
 
   useEffect(() => {
-    fetch("/concepts-data.json")
-      .then((r) => r.ok ? r.json() : null)
-      .then((data) => {
-        if (data?.concepts?.length) {
-          setConcepts(data.concepts);
-          setExpenses(data.expenses || []);
-          localStorage.setItem("concepts", JSON.stringify(data.concepts));
-          localStorage.setItem("expenses", JSON.stringify(data.expenses || []));
-        }
-      })
-      .catch(() => {});
+    Promise.all([
+      fetch("/api/concepts").then((r) => r.json()),
+      fetch("/api/expenses").then((r) => r.json()),
+    ]).then(([conceptsData, expensesData]) => {
+      setConcepts(conceptsData);
+      setExpenses(expensesData);
+    }).catch(() => {
+      setConcepts(seedConcepts);
+      setExpenses(seedExpenses);
+    });
   }, []);
 
   const [conceptModal, setConceptModal] = useState(null);
@@ -435,11 +420,19 @@ export default function App() {
   const [expenseFilter, setExpenseFilter] = useState("all");
 
   useEffect(() => {
-    localStorage.setItem("concepts", JSON.stringify(concepts));
+    fetch("/api/concepts", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(concepts),
+    }).catch(() => {});
   }, [concepts]);
 
   useEffect(() => {
-    localStorage.setItem("expenses", JSON.stringify(expenses));
+    fetch("/api/expenses", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(expenses),
+    }).catch(() => {});
   }, [expenses]);
 
   const expenseTotals = useMemo(() => {
@@ -474,45 +467,91 @@ export default function App() {
       .sort((a, b) => b.value - a.value);
   }, [concepts, expenseTotals]);
 
-  function saveConcept(data) {
-    if (conceptModal && conceptModal.id) {
-      setConcepts(concepts.map((c) => c.id === conceptModal.id ? { ...c, ...data } : c));
-    } else {
-      setConcepts([{ id: uid("c"), createdAt: new Date().toISOString().slice(0, 10), artifacts: [], ...data }, ...concepts]);
-    }
+  async function saveConcept(data) {
+    const payload = conceptModal && conceptModal.id ? { ...data, id: conceptModal.id } : { ...data, id: uid("c"), createdAt: new Date().toISOString().slice(0, 10), artifacts: data.artifacts || [] };
+    const saved = await fetch("/api/concepts", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    }).then((r) => r.json());
+
+    setConcepts((prev) => {
+      if (prev.find((c) => c.id === saved.id)) return prev.map((c) => c.id === saved.id ? saved : c);
+      return [saved, ...prev];
+    });
     setConceptModal(null);
   }
 
-  function saveExpense(data) {
-    if (expenseModal && expenseModal.id) {
-      setExpenses(expenses.map((e) => e.id === expenseModal.id ? { ...e, ...data } : e));
-    } else {
-      setExpenses([{ id: uid("e"), ...data }, ...expenses]);
-    }
+  async function saveExpense(data) {
+    const payload = expenseModal && expenseModal.id ? { ...data, id: expenseModal.id } : { ...data, id: uid("e") };
+    const saved = await fetch("/api/expenses", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    }).then((r) => r.json());
+
+    setExpenses((prev) => {
+      if (prev.find((e) => e.id === saved.id)) return prev.map((e) => e.id === saved.id ? saved : e);
+      return [saved, ...prev];
+    });
     setExpenseModal(null);
   }
 
-  function addArtifact(conceptId, file) {
+  async function addArtifact(conceptId, file) {
     const reader = new FileReader();
-    reader.onload = () => {
-      const artifact = { id: uid("a"), name: file.name, type: file.type, size: file.size, dataUrl: reader.result, uploadedAt: new Date().toISOString().slice(0, 10) };
-      setConcepts((prev) => prev.map((c) => c.id === conceptId ? { ...c, artifacts: [...(c.artifacts || []), artifact] } : c));
-    };
-    reader.readAsDataURL(file);
+    const artifact = await new Promise((resolve) => {
+      reader.onload = () => {
+        resolve({
+          id: uid("a"),
+          name: file.name,
+          type: file.type,
+          size: file.size,
+          dataUrl: reader.result,
+          uploadedAt: new Date().toISOString().slice(0, 10),
+        });
+      };
+      reader.readAsDataURL(file);
+    });
+
+    setConcepts((prev) => {
+      const updated = prev.map((c) => c.id === conceptId ? { ...c, artifacts: [...(c.artifacts || []), artifact] } : c);
+      const concept = updated.find((c) => c.id === conceptId);
+      if (concept) {
+        fetch("/api/concepts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(concept),
+        }).catch(() => {});
+      }
+      return updated;
+    });
   }
 
-  function deleteArtifact(conceptId, artifactId) {
-    setConcepts((prev) => prev.map((c) => c.id === conceptId ? { ...c, artifacts: (c.artifacts || []).filter((a) => a.id !== artifactId) } : c));
+  async function deleteArtifact(conceptId, artifactId) {
+    setConcepts((prev) => {
+      const updated = prev.map((c) => c.id === conceptId ? { ...c, artifacts: (c.artifacts || []).filter((a) => a.id !== artifactId) } : c);
+      const concept = updated.find((c) => c.id === conceptId);
+      if (concept) {
+        fetch("/api/concepts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(concept),
+        }).catch(() => {});
+      }
+      return updated;
+    });
   }
 
-  function doDelete() {
+  async function doDelete() {
     if (!confirmDelete) return;
     if (confirmDelete.type === "concept") {
-      setConcepts(concepts.filter((c) => c.id !== confirmDelete.id));
-      setExpenses(expenses.filter((e) => e.conceptId !== confirmDelete.id));
+      await fetch(`/api/concepts/${confirmDelete.id}`, { method: "DELETE" });
+      setConcepts((prev) => prev.filter((c) => c.id !== confirmDelete.id));
+      setExpenses((prev) => prev.filter((e) => e.conceptId !== confirmDelete.id));
       if (detailConcept?.id === confirmDelete.id) setDetailConcept(null);
     } else {
-      setExpenses(expenses.filter((e) => e.id !== confirmDelete.id));
+      await fetch(`/api/expenses/${confirmDelete.id}`, { method: "DELETE" });
+      setExpenses((prev) => prev.filter((e) => e.id !== confirmDelete.id));
     }
     setConfirmDelete(null);
   }
@@ -791,7 +830,18 @@ export default function App() {
             onBack={() => setDetailConcept(null)}
             onEdit={() => setConceptModal(concepts.find((c) => c.id === detailConcept.id))}
             onDelete={() => setConfirmDelete({ type: "concept", id: detailConcept.id, label: detailConcept.name })}
-            onStatusChange={(status) => setConcepts(concepts.map((c) => c.id === detailConcept.id ? { ...c, status } : c))}
+            onStatusChange={async (status) => {
+              const updated = concepts.map((c) => c.id === detailConcept.id ? { ...c, status } : c);
+              setConcepts(updated);
+              const concept = updated.find((c) => c.id === detailConcept.id);
+              if (concept) {
+                await fetch("/api/concepts", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(concept),
+                });
+              }
+            }}
             onAddExpense={() => setExpenseModal({ mode: "new", conceptId: detailConcept.id })}
             onEditExpense={(e) => setExpenseModal(e)}
             onDeleteExpense={(e) => setConfirmDelete({ type: "expense", id: e.id, label: e.description })}
@@ -971,7 +1021,7 @@ export default function App() {
           </p>
           <div style={{ display: "flex", gap: 10, justifyContent: "flex-end", marginTop: 18 }}>
             <button style={btnGhost} onClick={() => setConfirmDelete(null)}>Cancel</button>
-            <button style={{ ...btnPrimary, background: "#B42318" }} onClick={doDelete}>Delete</button>
+            <button style={{ ...btnPrimary, background: "#B42318" }} onClick={async () => await doDelete()}>Delete</button>
           </div>
         </Modal>
       )}
