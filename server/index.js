@@ -42,8 +42,13 @@ app.get("/api/expenses", (req, res) => {
 });
 
 app.post("/api/concepts", (req, res) => {
-  const concepts = readJson(CONCEPTS_FILE, []);
   const body = req.body || {};
+  if (Array.isArray(body)) {
+    writeJson(CONCEPTS_FILE, body);
+    res.json(body);
+    return;
+  }
+  const concepts = readJson(CONCEPTS_FILE, []);
   const record = {
     id: body.id || "c-" + Math.random().toString(36).slice(2, 9),
     createdAt: body.createdAt || new Date().toISOString().slice(0, 10),
