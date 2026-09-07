@@ -8,6 +8,7 @@
     "build": "vite build",
     "start": "node server/index.js",
     "migrate": "node server/migrate-to-postgres.js",
+    "cleanup": "node server/cleanup-test-data.js",
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "vitest run"
