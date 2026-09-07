@@ -1,15 +1,24 @@
 import http from "http";
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import { fileURLToPath } from "url";
+import path from "path";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const PROJECT_ROOT = path.resolve(__dirname, "..");
 
 const PORT = 5175;
 const BASE = `http://localhost:${PORT}`;
-let server;
-let conceptsBackup;
-let expensesBackup;
+const DATA_DIR = path.join(PROJECT_ROOT, "server", "data");
+const CONCEPTS_FILE = path.join(DATA_DIR, "concepts.json");
+const EXPENSES_FILE = path.join(DATA_DIR, "expenses.json");
+const BACKUP_DIR = path.join(DATA_DIR, "__test_backup__");
 
-function request(method, path, body) {
+let server;
+
+function request(method, reqPath, body) {
   return new Promise((resolve, reject) => {
-    const url = new URL(path, BASE);
+    const url = new URL(reqPath, BASE);
     const data = body ? JSON.stringify(body) : null;
     const options = {
       method,
@@ -36,9 +45,13 @@ function request(method, path, body) {
 }
 
 beforeAll(async () => {
+  mkdirSync(BACKUP_DIR, { recursive: true });
+  if (existsSync(CONCEPTS_FILE)) copyFileSync(CONCEPTS_FILE, path.join(BACKUP_DIR, "concepts.json"));
+  if (existsSync(EXPENSES_FILE)) copyFileSync(EXPENSES_FILE, path.join(BACKUP_DIR, "expenses.json"));
+
   const { spawn } = await import("child_process");
   server = spawn("node", ["server/index.js"], {
-    cwd: process.cwd(),
+    cwd: PROJECT_ROOT,
     env: { ...process.env, PORT: String(PORT) },
   });
   server.stdout.on("data", (data) => {
@@ -57,6 +70,15 @@ beforeAll(async () => {
 afterAll(async () => {
   server.kill("SIGTERM");
   await new Promise((resolve) => setTimeout(resolve, 1000));
+
+  const backupConcepts = path.join(BACKUP_DIR, "concepts.json");
+  const backupExpenses = path.join(BACKUP_DIR, "expenses.json");
+  if (existsSync(backupConcepts)) {
+    copyFileSync(backupConcepts, CONCEPTS_FILE);
+  }
+  if (existsSync(backupExpenses)) {
+    copyFileSync(backupExpenses, EXPENSES_FILE);
+  }
 });
 
 describe("Concepts API", () => {
@@ -145,10 +167,10 @@ describe("Expenses API", () => {
 describe("Delete cascade", () => {
   it("DELETE /api/concepts/:id removes linked expenses", async () => {
     const concepts = await request("GET", "/api/concepts");
-    let target = concepts.data.find((c) => c.name.includes("Test Concept"));
+    let target = concepts.data.find((c) => c.name === "Cascade Test");
     if (!target) {
       const newConcept = {
-        id: "c-test-cascade-" + Date.now(),
+        id: "c-test-cascade",
         name: "Cascade Test",
         description: "",
         domain: "",
