@@ -20,11 +20,8 @@ app.use(express.static(DIST_DIR));
 
 async function autoImport() {
   try {
-    const concepts = await all("concepts");
-    if (concepts.length > 0) {
-      console.log("Database already has data, skipping auto-import.");
-      return;
-    }
+    const existing = await all("concepts");
+    const existingIds = new Set(existing.map((c) => c.id));
 
     const conceptsJson = path.join(PUBLIC_DIR, "concepts-data.json");
     if (!existsSync(conceptsJson)) {
@@ -38,8 +35,14 @@ async function autoImport() {
       return;
     }
 
-    console.log(`Auto-importing ${data.concepts.length} concepts from concepts-data.json...`);
-    for (const c of data.concepts) {
+    const newConcepts = data.concepts.filter((c) => !existingIds.has(c.id));
+    if (newConcepts.length === 0) {
+      console.log("No new concepts to import.");
+      return;
+    }
+
+    console.log(`Auto-importing ${newConcepts.length} new concepts from concepts-data.json...`);
+    for (const c of newConcepts) {
       await insert("concepts", { ...c, artifacts: JSON.stringify(c.artifacts || []) });
     }
     console.log("Auto-import complete.");
