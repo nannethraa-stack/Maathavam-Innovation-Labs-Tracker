@@ -3,7 +3,7 @@ import cors from "cors";
 import { fileURLToPath } from "url";
 import path from "path";
 import { readFileSync, existsSync } from "fs";
-import { all, insert } from "./database.js";
+import { all, insert, remove } from "./database.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -18,10 +18,112 @@ app.use("/artifacts", express.static(path.join(PUBLIC_DIR, "artifacts")));
 app.use("/logo.jpg", express.static(path.join(PUBLIC_DIR, "logo.jpg")));
 app.use(express.static(DIST_DIR));
 
+app.get("/api/health", async (req, res) => {
+  try {
+    const concepts = await all("concepts");
+    const expenses = await all("expenses");
+    res.json({ concepts: concepts.length, expenses: expenses.length, sample: concepts.slice(0, 3) });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to load health" });
+  }
+});
+
+app.get("/api/concepts", async (req, res) => {
+  try {
+    const concepts = await all("concepts");
+    res.json(concepts);
+  } catch (err) {
+    console.error("Failed to load concepts:", err);
+    res.status(500).json({ error: "Failed to load concepts" });
+  }
+});
+
+app.get("/api/expenses", async (req, res) => {
+  try {
+    const expenses = await all("expenses");
+    res.json(expenses);
+  } catch (err) {
+    console.error("Failed to load expenses:", err);
+    res.status(500).json({ error: "Failed to load expenses" });
+  }
+});
+
+app.post("/api/concepts", async (req, res) => {
+  try {
+    await backup();
+    const body = req.body || {};
+    if (Array.isArray(body)) {
+      for (const record of body) {
+        await insert("concepts", { ...record, artifacts: JSON.stringify(record.artifacts || []) });
+      }
+      res.json(body);
+      return;
+    }
+    const record = {
+      id: body.id || "c-" + Math.random().toString(36).slice(2, 9),
+      createdAt: body.createdAt || new Date().toISOString().slice(0, 10),
+      artifacts: JSON.stringify(body.artifacts || []),
+      ...body,
+    };
+    await insert("concepts", record);
+    res.json({ ...record, artifacts: body.artifacts || [] });
+  } catch (err) {
+    console.error("Failed to save concept:", err);
+    res.status(500).json({ error: "Failed to save concept" });
+  }
+});
+
+app.post("/api/expenses", async (req, res) => {
+  try {
+    await backup();
+    const body = req.body || {};
+    const record = {
+      id: body.id || "e-" + Math.random().toString(36).slice(2, 9),
+      ...body,
+    };
+    await insert("expenses", record);
+    res.json(record);
+  } catch (err) {
+    console.error("Failed to save expense:", err);
+    res.status(500).json({ error: "Failed to save expense" });
+  }
+});
+
+app.delete("/api/concepts/:id", async (req, res) => {
+  try {
+    await backup();
+    await remove("concepts", req.params.id);
+    const expenses = await all("expenses");
+    for (const e of expenses.filter((e) => e.conceptId === req.params.id)) {
+      await remove("expenses", e.id);
+    }
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("Failed to delete concept:", err);
+    res.status(500).json({ error: "Failed to delete concept" });
+  }
+});
+
+app.delete("/api/expenses/:id", async (req, res) => {
+  try {
+    await backup();
+    await remove("expenses", req.params.id);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("Failed to delete expense:", err);
+    res.status(500).json({ error: "Failed to delete expense" });
+  }
+});
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(DIST_DIR, "index.html"));
+});
+
 async function autoImport() {
   try {
     const existing = await all("concepts");
     const existingIds = new Set(existing.map((c) => c.id));
+    console.log(`Auto-import check: ${existing.length} existing concepts in database`);
 
     const conceptsJson = path.join(PUBLIC_DIR, "concepts-data.json");
     if (!existsSync(conceptsJson)) {
