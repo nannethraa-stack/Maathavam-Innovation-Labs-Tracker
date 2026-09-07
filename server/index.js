@@ -22,6 +22,7 @@ app.get("/api/concepts", async (req, res) => {
     const concepts = await all("concepts");
     res.json(concepts);
   } catch (err) {
+    console.error("Failed to load concepts:", err);
     res.status(500).json({ error: "Failed to load concepts" });
   }
 });
@@ -31,13 +32,14 @@ app.get("/api/expenses", async (req, res) => {
     const expenses = await all("expenses");
     res.json(expenses);
   } catch (err) {
+    console.error("Failed to load expenses:", err);
     res.status(500).json({ error: "Failed to load expenses" });
   }
 });
 
 app.post("/api/concepts", async (req, res) => {
   try {
-    backup();
+    await backup();
     const body = req.body || {};
     if (Array.isArray(body)) {
       for (const record of body) {
@@ -55,13 +57,14 @@ app.post("/api/concepts", async (req, res) => {
     await insert("concepts", record);
     res.json({ ...record, artifacts: body.artifacts || [] });
   } catch (err) {
+    console.error("Failed to save concept:", err);
     res.status(500).json({ error: "Failed to save concept" });
   }
 });
 
 app.post("/api/expenses", async (req, res) => {
   try {
-    backup();
+    await backup();
     const body = req.body || {};
     const record = {
       id: body.id || "e-" + Math.random().toString(36).slice(2, 9),
@@ -70,13 +73,14 @@ app.post("/api/expenses", async (req, res) => {
     await insert("expenses", record);
     res.json(record);
   } catch (err) {
+    console.error("Failed to save expense:", err);
     res.status(500).json({ error: "Failed to save expense" });
   }
 });
 
 app.delete("/api/concepts/:id", async (req, res) => {
   try {
-    backup();
+    await backup();
     await remove("concepts", req.params.id);
     const expenses = await all("expenses");
     for (const e of expenses.filter((e) => e.conceptId === req.params.id)) {
@@ -84,16 +88,18 @@ app.delete("/api/concepts/:id", async (req, res) => {
     }
     res.json({ ok: true });
   } catch (err) {
+    console.error("Failed to delete concept:", err);
     res.status(500).json({ error: "Failed to delete concept" });
   }
 });
 
 app.delete("/api/expenses/:id", async (req, res) => {
   try {
-    backup();
+    await backup();
     await remove("expenses", req.params.id);
     res.json({ ok: true });
   } catch (err) {
+    console.error("Failed to delete expense:", err);
     res.status(500).json({ error: "Failed to delete expense" });
   }
 });
@@ -106,4 +112,3 @@ const port = process.env.PORT || 5174;
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
-

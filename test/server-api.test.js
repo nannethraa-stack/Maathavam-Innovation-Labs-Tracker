@@ -1,5 +1,6 @@
-import http from "http";
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import { spawn } from "child_process";
+import http from "http";
 import { copyFileSync, existsSync, mkdirSync } from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
@@ -45,8 +46,13 @@ function request(method, reqPath, body) {
 }
 
 beforeAll(async () => {
+  if (!process.env.DATABASE_URL) {
+    console.log("Skipping server API tests: DATABASE_URL not set");
+    return;
+  }
+
   mkdirSync(BACKUP_DIR, { recursive: true });
-  
+
   if (existsSync(DB_PATH)) {
     copyFileSync(DB_PATH, path.join(BACKUP_DIR, "app.sqlite"));
   }
@@ -57,7 +63,6 @@ beforeAll(async () => {
     copyFileSync(DB_PATH, TEST_DB_PATH);
   }
 
-  const { spawn } = await import("child_process");
   server = spawn("node", ["server/index.js"], {
     cwd: PROJECT_ROOT,
     env: { ...process.env, PORT: String(PORT) },
@@ -76,15 +81,21 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+  if (!process.env.DATABASE_URL) {
+    return;
+  }
+
   server.kill("SIGTERM");
   await new Promise((resolve) => setTimeout(resolve, 1000));
-  
+
   if (existsSync(path.join(BACKUP_DIR, "app.sqlite"))) {
     copyFileSync(path.join(BACKUP_DIR, "app.sqlite"), DB_PATH);
   }
 });
 
-describe("Concepts API", () => {
+const runServerTests = process.env.DATABASE_URL ? describe : describe.skip;
+
+runServerTests("Concepts API", () => {
   it("GET /api/concepts returns array", async () => {
     const res = await request("GET", "/api/concepts");
     expect(res.status).toBe(200);
@@ -135,7 +146,7 @@ describe("Concepts API", () => {
   });
 });
 
-describe("Expenses API", () => {
+runServerTests("Expenses API", () => {
   it("GET /api/expenses returns array", async () => {
     const res = await request("GET", "/api/expenses");
     expect(res.status).toBe(200);
@@ -167,7 +178,7 @@ describe("Expenses API", () => {
   });
 });
 
-describe("Delete cascade", () => {
+runServerTests("Delete cascade", () => {
   it("DELETE /api/concepts/:id removes linked expenses", async () => {
     const concepts = await request("GET", "/api/concepts");
     let target = concepts.data.find((c) => c.name === "Cascade Test");
