@@ -1,6 +1,6 @@
 import http from "http";
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
-import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import { copyFileSync, existsSync, mkdirSync } from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
 
@@ -10,8 +10,8 @@ const PROJECT_ROOT = path.resolve(__dirname, "..");
 const PORT = 5175;
 const BASE = `http://localhost:${PORT}`;
 const DATA_DIR = path.join(PROJECT_ROOT, "server", "data");
-const CONCEPTS_FILE = path.join(DATA_DIR, "concepts.json");
-const EXPENSES_FILE = path.join(DATA_DIR, "expenses.json");
+const DB_PATH = path.join(DATA_DIR, "app.sqlite");
+const TEST_DB_PATH = path.join(DATA_DIR, "app.test.sqlite");
 const BACKUP_DIR = path.join(DATA_DIR, "__test_backup__");
 
 let server;
@@ -46,8 +46,16 @@ function request(method, reqPath, body) {
 
 beforeAll(async () => {
   mkdirSync(BACKUP_DIR, { recursive: true });
-  if (existsSync(CONCEPTS_FILE)) copyFileSync(CONCEPTS_FILE, path.join(BACKUP_DIR, "concepts.json"));
-  if (existsSync(EXPENSES_FILE)) copyFileSync(EXPENSES_FILE, path.join(BACKUP_DIR, "expenses.json"));
+  
+  if (existsSync(DB_PATH)) {
+    copyFileSync(DB_PATH, path.join(BACKUP_DIR, "app.sqlite"));
+  }
+
+  if (existsSync(TEST_DB_PATH)) {
+    copyFileSync(TEST_DB_PATH, DB_PATH);
+  } else if (existsSync(DB_PATH)) {
+    copyFileSync(DB_PATH, TEST_DB_PATH);
+  }
 
   const { spawn } = await import("child_process");
   server = spawn("node", ["server/index.js"], {
@@ -70,14 +78,9 @@ beforeAll(async () => {
 afterAll(async () => {
   server.kill("SIGTERM");
   await new Promise((resolve) => setTimeout(resolve, 1000));
-
-  const backupConcepts = path.join(BACKUP_DIR, "concepts.json");
-  const backupExpenses = path.join(BACKUP_DIR, "expenses.json");
-  if (existsSync(backupConcepts)) {
-    copyFileSync(backupConcepts, CONCEPTS_FILE);
-  }
-  if (existsSync(backupExpenses)) {
-    copyFileSync(backupExpenses, EXPENSES_FILE);
+  
+  if (existsSync(path.join(BACKUP_DIR, "app.sqlite"))) {
+    copyFileSync(path.join(BACKUP_DIR, "app.sqlite"), DB_PATH);
   }
 });
 
