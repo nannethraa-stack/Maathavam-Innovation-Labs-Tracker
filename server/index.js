@@ -3,7 +3,7 @@ import cors from "cors";
 import { fileURLToPath } from "url";
 import path from "path";
 import { readFileSync, existsSync } from "fs";
-import { all, insert, remove } from "./database.js";
+import { all, insert, remove, backup } from "./database.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
