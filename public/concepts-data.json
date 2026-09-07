@@ -1,0 +1,723 @@
+{
+  "concepts": [
+    {
+      "id": "c-9oc8s1u",
+      "name": "Agricultureadvance_AIMonitor",
+      "description": "",
+      "domain": "",
+      "patentStatus": "Not started",
+      "plannedOrgForPOC": "",
+      "status": "idea",
+      "eta": "",
+      "requiresSensor": "No",
+      "artifacts": [
+        {
+          "id": "a-83vsgxl",
+          "name": "agrisensorsbom.docx",
+          "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "size": 14419,
+          "url": "/artifacts/c-9oc8s1u/agrisensorsbom.docx",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-34xtyyf",
+          "name": "voc_drone_concept.pdf",
+          "type": "application/pdf",
+          "size": 29286,
+          "url": "/artifacts/c-9oc8s1u/voc_drone_concept.pdf",
+          "uploadedAt": "2026-09-07"
+        }
+      ],
+      "createdAt": "2026-09-07"
+    },
+    {
+      "id": "c-c3fq6on",
+      "name": "AirbagHelmet",
+      "description": "",
+      "domain": "",
+      "patentStatus": "Not started",
+      "plannedOrgForPOC": "",
+      "status": "idea",
+      "eta": "",
+      "requiresSensor": "No",
+      "artifacts": [
+        {
+          "id": "a-cmhtkgg",
+          "name": "Project_Sipra_AI_Fusion_Proposal.pdf",
+          "type": "application/pdf",
+          "size": 35996,
+          "url": "/artifacts/c-c3fq6on/Project_Sipra_AI_Fusion_Proposal.pdf",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-7407gil",
+          "name": "Project_Śipra (1).mp4",
+          "type": "video/mp4",
+          "size": 36190628,
+          "url": "/artifacts/c-c3fq6on/Project__ipra__1_.mp4",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-81auy0j",
+          "name": "Sipra_Value_Engineered_Safety (1).pptx",
+          "type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+          "size": 20837398,
+          "url": "/artifacts/c-c3fq6on/Sipra_Value_Engineered_Safety__1_.pptx",
+          "uploadedAt": "2026-09-07"
+        }
+      ],
+      "createdAt": "2026-09-07"
+    },
+    {
+      "id": "c-si4xa86",
+      "name": "Behvioral Assesment",
+      "description": "",
+      "domain": "",
+      "patentStatus": "Not started",
+      "plannedOrgForPOC": "",
+      "status": "idea",
+      "eta": "",
+      "requiresSensor": "No",
+      "artifacts": [
+        {
+          "id": "a-w8bvayq",
+          "name": "Student_Safety_Behavior_Risk_Screener (2).pdf",
+          "type": "application/pdf",
+          "size": 69688,
+          "url": "/artifacts/c-si4xa86/Student_Safety_Behavior_Risk_Screener__2_.pdf",
+          "uploadedAt": "2026-09-07"
+        }
+      ],
+      "createdAt": "2026-09-07"
+    },
+    {
+      "id": "c-u0dxttz",
+      "name": "CoolerSocks",
+      "description": "",
+      "domain": "",
+      "patentStatus": "Not started",
+      "plannedOrgForPOC": "",
+      "status": "idea",
+      "eta": "",
+      "requiresSensor": "No",
+      "artifacts": [
+        {
+          "id": "a-wllzva4",
+          "name": "desktop.ini",
+          "type": "application/octet-stream",
+          "size": 90,
+          "url": "/artifacts/c-u0dxttz/desktop.ini",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-5owbxcf",
+          "name": "reusable_hydrogel_soles (1).pdf",
+          "type": "application/pdf",
+          "size": 4535,
+          "url": "/artifacts/c-u0dxttz/reusable_hydrogel_soles__1_.pdf",
+          "uploadedAt": "2026-09-07"
+        }
+      ],
+      "createdAt": "2026-09-07"
+    },
+    {
+      "id": "c-oq3vyz2",
+      "name": "Craddle AI",
+      "description": "",
+      "domain": "",
+      "patentStatus": "Not started",
+      "plannedOrgForPOC": "",
+      "status": "idea",
+      "eta": "",
+      "requiresSensor": "No",
+      "artifacts": [
+        {
+          "id": "a-wigt6hn",
+          "name": "designdocfor nestguard.docx",
+          "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "size": 20180,
+          "url": "/artifacts/c-oq3vyz2/designdocfor_nestguard.docx",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-agfmna0",
+          "name": "designdocfor nestguard.pdf",
+          "type": "application/pdf",
+          "size": 342854,
+          "url": "/artifacts/c-oq3vyz2/designdocfor_nestguard.pdf",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-pu4775s",
+          "name": "imp to discucs iwth dinesh.txt",
+          "type": "text/plain",
+          "size": 4504,
+          "url": "/artifacts/c-oq3vyz2/imp_to_discucs_iwth_dinesh.txt",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-y18d63i",
+          "name": "Modular_Smart_Infant_Kit_Spec.docx",
+          "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "size": 27676,
+          "url": "/artifacts/c-oq3vyz2/Modular_Smart_Infant_Kit_Spec.docx",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-qf0jq37",
+          "name": "~$signdocfor nestguard.docx",
+          "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "size": 162,
+          "url": "/artifacts/c-oq3vyz2/__signdocfor_nestguard.docx",
+          "uploadedAt": "2026-09-07"
+        }
+      ],
+      "createdAt": "2026-09-07"
+    },
+    {
+      "id": "c-0hyeay4",
+      "name": "EdgeCricket-Indoor AI Analytics",
+      "description": "",
+      "domain": "",
+      "patentStatus": "Not started",
+      "plannedOrgForPOC": "",
+      "status": "idea",
+      "eta": "",
+      "requiresSensor": "No",
+      "artifacts": [
+        {
+          "id": "a-ubjnfig",
+          "name": "Cricket_Tracking_System_Technical_Assessment_Report.docx",
+          "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "size": 13072,
+          "url": "/artifacts/c-0hyeay4/Cricket_Tracking_System_Technical_Assessment_Report.docx",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-nf9lwzz",
+          "name": "Edge-AI_Cricket_Analytics.mp4",
+          "type": "video/mp4",
+          "size": 29270994,
+          "url": "/artifacts/c-0hyeay4/Edge-AI_Cricket_Analytics.mp4",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-wf8939d",
+          "name": "Edge-AI_Cricket_Analytics_Journey.png",
+          "type": "image/png",
+          "size": 5162335,
+          "url": "/artifacts/c-0hyeay4/Edge-AI_Cricket_Analytics_Journey.png",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-5qfo8fm",
+          "name": "Multi_Modal_Indoor_Cricket_Tracking_System_Specification_v4.pdf",
+          "type": "application/pdf",
+          "size": 37714,
+          "url": "/artifacts/c-0hyeay4/Multi_Modal_Indoor_Cricket_Tracking_System_Specification_v4.pdf",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-0fchzs3",
+          "name": "video.txt",
+          "type": "text/plain",
+          "size": 1161,
+          "url": "/artifacts/c-0hyeay4/video.txt",
+          "uploadedAt": "2026-09-07"
+        }
+      ],
+      "createdAt": "2026-09-07"
+    },
+    {
+      "id": "c-z3rf8o5",
+      "name": "GuardianJacketfor Wanderers",
+      "description": "",
+      "domain": "",
+      "patentStatus": "Not started",
+      "plannedOrgForPOC": "",
+      "status": "idea",
+      "eta": "",
+      "requiresSensor": "No",
+      "artifacts": [
+        {
+          "id": "a-ld53ymq",
+          "name": "GuardianGarment_Enterprise_Architecture_and_Design_Specification.docx",
+          "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "size": 37835,
+          "url": "/artifacts/c-z3rf8o5/GuardianGarment_Enterprise_Architecture_and_Design_Specification.docx",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-x0h4qdb",
+          "name": "GuardianGarment_Enterprise_POC_Architecture_Design.docx",
+          "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "size": 37193,
+          "url": "/artifacts/c-z3rf8o5/GuardianGarment_Enterprise_POC_Architecture_Design.docx",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-v3y7sdt",
+          "name": "GuardianGarment_POC_Guide (1).pdf",
+          "type": "application/pdf",
+          "size": 15884,
+          "url": "/artifacts/c-z3rf8o5/GuardianGarment_POC_Guide__1_.pdf",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-lppyll2",
+          "name": "GuardianGarment_POC_Guide.pdf",
+          "type": "application/pdf",
+          "size": 15884,
+          "url": "/artifacts/c-z3rf8o5/GuardianGarment_POC_Guide.pdf",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-qgy7r1g",
+          "name": "GuardianGarment_Updated_Specs.pdf",
+          "type": "application/pdf",
+          "size": 22961,
+          "url": "/artifacts/c-z3rf8o5/GuardianGarment_Updated_Specs.pdf",
+          "uploadedAt": "2026-09-07"
+        }
+      ],
+      "createdAt": "2026-09-07"
+    },
+    {
+      "id": "c-lubpqpg",
+      "name": "InToxicationIdentifier",
+      "description": "",
+      "domain": "",
+      "patentStatus": "Not started",
+      "plannedOrgForPOC": "",
+      "status": "idea",
+      "eta": "",
+      "requiresSensor": "No",
+      "artifacts": [
+        {
+          "id": "a-dqp2yu1",
+          "name": "Intoxication_Detection_Comprehensive_Specification.pdf",
+          "type": "application/pdf",
+          "size": 24739,
+          "url": "/artifacts/c-lubpqpg/Intoxication_Detection_Comprehensive_Specification.pdf",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-tftaldt",
+          "name": "Intoxication_Kiosk_with_Workflow.pptx.pptm",
+          "type": "application/octet-stream",
+          "size": 103444,
+          "url": "/artifacts/c-lubpqpg/Intoxication_Kiosk_with_Workflow.pptx.pptm",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-l5xu6gc",
+          "name": "wallmounted.docx",
+          "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "size": 16994,
+          "url": "/artifacts/c-lubpqpg/wallmounted.docx",
+          "uploadedAt": "2026-09-07"
+        }
+      ],
+      "createdAt": "2026-09-07"
+    },
+    {
+      "id": "c-pg7rg51",
+      "name": "MargRaksh",
+      "description": "",
+      "domain": "",
+      "patentStatus": "Not started",
+      "plannedOrgForPOC": "",
+      "status": "idea",
+      "eta": "",
+      "requiresSensor": "No",
+      "artifacts": [
+        {
+          "id": "a-t3743px",
+          "name": "MaragRaksh_Updated.pptx",
+          "type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+          "size": 48791,
+          "url": "/artifacts/c-pg7rg51/MaragRaksh_Updated.pptx",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-k68jr4n",
+          "name": "Marag_Raksh_FAQ.html",
+          "type": "application/octet-stream",
+          "size": 7797,
+          "url": "/artifacts/c-pg7rg51/Marag_Raksh_FAQ.html",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-vebtk25",
+          "name": "TransitGuard_Updated.pptx",
+          "type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+          "size": 103474,
+          "url": "/artifacts/c-pg7rg51/TransitGuard_Updated.pptx",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-t67i1kr",
+          "name": "~$MaragRaksh_Updated.pptx",
+          "type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+          "size": 165,
+          "url": "/artifacts/c-pg7rg51/__MaragRaksh_Updated.pptx",
+          "uploadedAt": "2026-09-07"
+        }
+      ],
+      "createdAt": "2026-09-07"
+    },
+    {
+      "id": "c-2g5r9ly",
+      "name": "next_gen_adult_diaper_concept",
+      "description": "",
+      "domain": "",
+      "patentStatus": "Not started",
+      "plannedOrgForPOC": "",
+      "status": "idea",
+      "eta": "",
+      "requiresSensor": "No",
+      "artifacts": [
+        {
+          "id": "a-pkupbk7",
+          "name": "next_gen_adult_diaper_concept_summary_v3.pdf",
+          "type": "application/pdf",
+          "size": 38792,
+          "url": "/artifacts/c-2g5r9ly/next_gen_adult_diaper_concept_summary_v3.pdf",
+          "uploadedAt": "2026-09-07"
+        }
+      ],
+      "createdAt": "2026-09-07"
+    },
+    {
+      "id": "c-wuxksbf",
+      "name": "Oil Pilfilrage- Logistics",
+      "description": "",
+      "domain": "",
+      "patentStatus": "Not started",
+      "plannedOrgForPOC": "",
+      "status": "idea",
+      "eta": "",
+      "requiresSensor": "No",
+      "artifacts": [
+        {
+          "id": "a-udt8cxr",
+          "name": "OilPilferageNDA_Updated (1).docx",
+          "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "size": 25595,
+          "url": "/artifacts/c-wuxksbf/OilPilferageNDA_Updated__1_.docx",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-ix9fk9u",
+          "name": "SensorsBOM.docx",
+          "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "size": 15634,
+          "url": "/artifacts/c-wuxksbf/SensorsBOM.docx",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-n75d5n3",
+          "name": "TransitGuard Fuel Pilferage Solution_ Strategic Critique & Enhancement Framework.docx",
+          "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "size": 110194,
+          "url": "/artifacts/c-wuxksbf/TransitGuard_Fuel_Pilferage_Solution__Strategic_Critique___Enhancement_Framework.docx",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-8985ome",
+          "name": "TransitGuard V6 — Expert Industry Critique.pdf",
+          "type": "application/pdf",
+          "size": 385239,
+          "url": "/artifacts/c-wuxksbf/TransitGuard_V6___Expert_Industry_Critique.pdf",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-5p445wu",
+          "name": "TransitGuard_Edge_Architecture_v2 July 2026 (1).pdf",
+          "type": "application/pdf",
+          "size": 23667,
+          "url": "/artifacts/c-wuxksbf/TransitGuard_Edge_Architecture_v2_July_2026__1_.pdf",
+          "uploadedAt": "2026-09-07"
+        }
+      ],
+      "createdAt": "2026-09-07"
+    },
+    {
+      "id": "c-yx3r4m1",
+      "name": "Oil Pilfilrage- Oil Companies",
+      "description": "",
+      "domain": "",
+      "patentStatus": "Not started",
+      "plannedOrgForPOC": "",
+      "status": "idea",
+      "eta": "",
+      "requiresSensor": "No",
+      "artifacts": [
+        {
+          "id": "a-wzw50st",
+          "name": "TransitGuard_Deck.pptx",
+          "type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+          "size": 100655,
+          "url": "/artifacts/c-yx3r4m1/TransitGuard_Deck.pptx",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-3cx75qj",
+          "name": "~$TransitGuard_Deck.pptx",
+          "type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+          "size": 165,
+          "url": "/artifacts/c-yx3r4m1/__TransitGuard_Deck.pptx",
+          "uploadedAt": "2026-09-07"
+        }
+      ],
+      "createdAt": "2026-09-07"
+    },
+    {
+      "id": "c-7npus7v",
+      "name": "OralCancerResarch",
+      "description": "",
+      "domain": "",
+      "patentStatus": "Not started",
+      "plannedOrgForPOC": "",
+      "status": "idea",
+      "eta": "",
+      "requiresSensor": "No",
+      "artifacts": [
+        {
+          "id": "a-yqi024k",
+          "name": "Prime-Ablate-Annihilate ProtocolNDA.docx",
+          "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "size": 24618,
+          "url": "/artifacts/c-7npus7v/Prime-Ablate-Annihilate_ProtocolNDA.docx",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-cv6gyoh",
+          "name": "Prime-Ablate-Annihilate_Final_Protocol_V7.pdf",
+          "type": "application/pdf",
+          "size": 25897,
+          "url": "/artifacts/c-7npus7v/Prime-Ablate-Annihilate_Final_Protocol_V7.pdf",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-2r35zmk",
+          "name": "Research_Introduction_Partner_NDA.docx",
+          "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "size": 28317,
+          "url": "/artifacts/c-7npus7v/Research_Introduction_Partner_NDA.docx",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-xfsucxt",
+          "name": "Research_Introduction_Partner_NDA_Updated (1).docx",
+          "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "size": 30318,
+          "url": "/artifacts/c-7npus7v/Research_Introduction_Partner_NDA_Updated__1_.docx",
+          "uploadedAt": "2026-09-07"
+        }
+      ],
+      "createdAt": "2026-09-07"
+    },
+    {
+      "id": "c-fm077o3",
+      "name": "OralGel",
+      "description": "",
+      "domain": "",
+      "patentStatus": "Not started",
+      "plannedOrgForPOC": "",
+      "status": "idea",
+      "eta": "",
+      "requiresSensor": "No",
+      "artifacts": [
+        {
+          "id": "a-fg7b7d7",
+          "name": "OroTan-MX_Competitive_Analysis_Matrix_v2 (1).pdf",
+          "type": "application/pdf",
+          "size": 8495,
+          "url": "/artifacts/c-fm077o3/OroTan-MX_Competitive_Analysis_Matrix_v2__1_.pdf",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-u25k6mf",
+          "name": "OroTan-MX_Proposal_DrReddys jun28v1.pdf",
+          "type": "application/pdf",
+          "size": 198902,
+          "url": "/artifacts/c-fm077o3/OroTan-MX_Proposal_DrReddys_jun28v1.pdf",
+          "uploadedAt": "2026-09-07"
+        }
+      ],
+      "createdAt": "2026-09-07"
+    },
+    {
+      "id": "c-zoum5nc",
+      "name": "PostureChairs",
+      "description": "",
+      "domain": "",
+      "patentStatus": "Not started",
+      "plannedOrgForPOC": "",
+      "status": "idea",
+      "eta": "",
+      "requiresSensor": "No",
+      "artifacts": [
+        {
+          "id": "a-ecxlvl5",
+          "name": "desktop.ini",
+          "type": "application/octet-stream",
+          "size": 110,
+          "url": "/artifacts/c-zoum5nc/desktop.ini",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-wbl2cdp",
+          "name": "PAAI_Detailed_Technical_Specification.pdf",
+          "type": "application/pdf",
+          "size": 22778,
+          "url": "/artifacts/c-zoum5nc/PAAI_Detailed_Technical_Specification.pdf",
+          "uploadedAt": "2026-09-07"
+        }
+      ],
+      "createdAt": "2026-09-07"
+    },
+    {
+      "id": "c-ko8khj4",
+      "name": "RainWaterHarvesting",
+      "description": "",
+      "domain": "",
+      "patentStatus": "Not started",
+      "plannedOrgForPOC": "",
+      "status": "idea",
+      "eta": "",
+      "requiresSensor": "No",
+      "artifacts": [
+        {
+          "id": "a-mb2afxh",
+          "name": "SAM_Integrated_Water_Harvesting.pptx",
+          "type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+          "size": 68423,
+          "url": "/artifacts/c-ko8khj4/SAM_Integrated_Water_Harvesting.pptx",
+          "uploadedAt": "2026-09-07"
+        }
+      ],
+      "createdAt": "2026-09-07"
+    },
+    {
+      "id": "c-d3qttqx",
+      "name": "SmartFall-Attenution Attire",
+      "description": "",
+      "domain": "",
+      "patentStatus": "Not started",
+      "plannedOrgForPOC": "",
+      "status": "idea",
+      "eta": "",
+      "requiresSensor": "No",
+      "artifacts": [
+        {
+          "id": "a-a1ud5ph",
+          "name": "Smart_Fall_Detection_Garment_v3_Hybrid (1).pdf",
+          "type": "application/pdf",
+          "size": 24053,
+          "url": "/artifacts/c-d3qttqx/Smart_Fall_Detection_Garment_v3_Hybrid__1_.pdf",
+          "uploadedAt": "2026-09-07"
+        }
+      ],
+      "createdAt": "2026-09-07"
+    },
+    {
+      "id": "c-pxui30m",
+      "name": "SmartGlassesNighVision",
+      "description": "",
+      "domain": "",
+      "patentStatus": "Not started",
+      "plannedOrgForPOC": "",
+      "status": "idea",
+      "eta": "",
+      "requiresSensor": "No",
+      "artifacts": [
+        {
+          "id": "a-i8k7m33",
+          "name": "Gradient_Attenuated_Smart_Eyewear_Master_Concept_File.pdf",
+          "type": "application/pdf",
+          "size": 30351,
+          "url": "/artifacts/c-pxui30m/Gradient_Attenuated_Smart_Eyewear_Master_Concept_File.pdf",
+          "uploadedAt": "2026-09-07"
+        }
+      ],
+      "createdAt": "2026-09-07"
+    },
+    {
+      "id": "c-55ige44",
+      "name": "SmartIndicator",
+      "description": "",
+      "domain": "",
+      "patentStatus": "Not started",
+      "plannedOrgForPOC": "",
+      "status": "idea",
+      "eta": "",
+      "requiresSensor": "No",
+      "artifacts": [
+        {
+          "id": "a-b801bmx",
+          "name": "moto_indicator_proposal.docx",
+          "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "size": 15885,
+          "url": "/artifacts/c-55ige44/moto_indicator_proposal.docx",
+          "uploadedAt": "2026-09-07"
+        }
+      ],
+      "createdAt": "2026-09-07"
+    },
+    {
+      "id": "c-frzz2yc",
+      "name": "SugarMonitor",
+      "description": "",
+      "domain": "",
+      "patentStatus": "Not started",
+      "plannedOrgForPOC": "",
+      "status": "idea",
+      "eta": "",
+      "requiresSensor": "No",
+      "artifacts": [
+        {
+          "id": "a-bx9icnd",
+          "name": "Advanced_CGM_Membrane_Technical_Report_Rev9.pdf",
+          "type": "application/pdf",
+          "size": 29902,
+          "url": "/artifacts/c-frzz2yc/Advanced_CGM_Membrane_Technical_Report_Rev9.pdf",
+          "uploadedAt": "2026-09-07"
+        },
+        {
+          "id": "a-rf2m7ml",
+          "name": "sugarsensors.docx",
+          "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "size": 14597,
+          "url": "/artifacts/c-frzz2yc/sugarsensors.docx",
+          "uploadedAt": "2026-09-07"
+        }
+      ],
+      "createdAt": "2026-09-07"
+    },
+    {
+      "id": "c-16yubwy",
+      "name": "TalentPrism",
+      "description": "",
+      "domain": "",
+      "patentStatus": "Not started",
+      "plannedOrgForPOC": "",
+      "status": "idea",
+      "eta": "",
+      "requiresSensor": "No",
+      "artifacts": [
+        {
+          "id": "a-qp5tums",
+          "name": "TalentPrism-25_Strengths_Assessment.pdf",
+          "type": "application/pdf",
+          "size": 359245,
+          "url": "/artifacts/c-16yubwy/TalentPrism-25_Strengths_Assessment.pdf",
+          "uploadedAt": "2026-09-07"
+        }
+      ],
+      "createdAt": "2026-09-07"
+    }
+  ],
+  "expenses": []
+}
