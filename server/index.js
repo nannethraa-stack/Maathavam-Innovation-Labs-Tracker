@@ -38,6 +38,16 @@ app.get("/api/concepts", async (req, res) => {
   }
 });
 
+app.get("/api/health", async (req, res) => {
+  try {
+    const concepts = await all("concepts");
+    const expenses = await all("expenses");
+    res.json({ concepts: concepts.length, expenses: expenses.length, sample: concepts.slice(0, 3) });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to load health" });
+  }
+});
+
 app.get("/api/expenses", async (req, res) => {
   try {
     const expenses = await all("expenses");
