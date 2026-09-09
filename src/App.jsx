@@ -418,6 +418,7 @@ export default function App() {
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [previewArtifact, setPreviewArtifact] = useState(null);
   const [expenseFilter, setExpenseFilter] = useState("all");
+  const [selectedConceptId, setSelectedConceptId] = useState("all");
 
   useEffect(() => {
     fetch("/api/concepts", {
@@ -441,31 +442,48 @@ export default function App() {
     return map;
   }, [expenses]);
 
-  const totalSpentOverall = useMemo(() => expenses.reduce((s, e) => s + e.amount, 0), [expenses]);
+  const totalSpentOverall = useMemo(() => {
+    const ids = selectedConceptId === "all" ? concepts.map((c) => c.id) : [selectedConceptId];
+    return expenses.filter((e) => ids.includes(e.conceptId)).reduce((s, e) => s + e.amount, 0);
+  }, [expenses, concepts, selectedConceptId]);
+
+  const filteredConcepts = useMemo(() => {
+    if (selectedConceptId === "all") return concepts;
+    return concepts.filter((c) => c.id === selectedConceptId);
+  }, [concepts, selectedConceptId]);
+
+  const filteredExpenseTotals = useMemo(() => {
+    const map = {};
+    for (const e of expenses) {
+      if (selectedConceptId !== "all" && e.conceptId !== selectedConceptId) continue;
+      map[e.conceptId] = (map[e.conceptId] || 0) + e.amount;
+    }
+    return map;
+  }, [expenses, selectedConceptId]);
 
   const domainBreakdown = useMemo(() => {
     const map = {};
-    for (const c of concepts) {
+    for (const c of filteredConcepts) {
       const key = (c.domain || "Unspecified").trim();
       if (!map[key]) map[key] = { domain: key, count: 0, spend: 0 };
       map[key].count += 1;
-      map[key].spend += expenseTotals[c.id] || 0;
+      map[key].spend += filteredExpenseTotals[c.id] || 0;
     }
     return Object.values(map).sort((a, b) => b.spend - a.spend);
-  }, [concepts, expenseTotals]);
+  }, [filteredConcepts, filteredExpenseTotals]);
 
   const patentBreakdown = useMemo(() => {
     const buckets = { "Patented": 0, "Provisional Patented": 0, "Not Patented": 0 };
-    for (const c of concepts) buckets[patentBucket(c.patentStatus)] += 1;
+    for (const c of filteredConcepts) buckets[patentBucket(c.patentStatus)] += 1;
     return buckets;
-  }, [concepts]);
+  }, [filteredConcepts]);
 
   const wheelData = useMemo(() => {
-    return concepts
-      .map((c) => ({ name: c.name, value: expenseTotals[c.id] || 0 }))
+    return filteredConcepts
+      .map((c) => ({ name: c.name, value: filteredExpenseTotals[c.id] || 0 }))
       .filter((d) => d.value > 0)
       .sort((a, b) => b.value - a.value);
-  }, [concepts, expenseTotals]);
+  }, [filteredConcepts, filteredExpenseTotals]);
 
   async function saveConcept(data) {
     const payload = conceptModal && conceptModal.id ? { ...data, id: conceptModal.id } : { ...data, id: uid("c"), createdAt: new Date().toISOString().slice(0, 10), artifacts: data.artifacts || [] };
@@ -637,9 +655,19 @@ export default function App() {
               <p style={{ margin: "8px 0 0", color: "#6B6858", fontSize: 15, fontWeight: 500 }}>Ideas, patents, POCs, and every rupee spent — all synced, all in view.</p>
             </div>
 
+            <div style={{ marginBottom: 18 }}>
+              <select value={selectedConceptId} onChange={(e) => setSelectedConceptId(e.target.value)} style={{
+                padding: "8px 12px", borderRadius: 6, border: "1px solid #DAD6C8", background: "#fff",
+                color: "#1B1F2A", fontSize: 13.5, fontFamily: "'IBM Plex Sans', sans-serif"
+              }}>
+                <option value="all">All projects</option>
+                {concepts.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+              </select>
+            </div>
+
             {/* Total concepts captured */}
             <div style={{ marginBottom: 14, maxWidth: 220 }}>
-              <KpiCard label="Total concepts captured" value={concepts.length} accent="#1D4E5F" />
+              <KpiCard label="Total concepts captured" value={filteredConcepts.length} accent="#1D4E5F" />
             </div>
 
             {/* Concepts by domain — grouped totals */}
@@ -667,7 +695,7 @@ export default function App() {
             {/* Concept-wise project summary */}
             <div style={{ marginBottom: 16 }}>
               <Panel title="Project summary — concept wise">
-                {concepts.length === 0 ? <EmptyState text="No concepts yet." /> : (
+                {filteredConcepts.length === 0 ? <EmptyState text="No concepts yet." /> : (
                   <div style={{ overflow: "auto" }}>
                     <table>
                       <thead>
@@ -678,7 +706,7 @@ export default function App() {
                         </tr>
                       </thead>
                       <tbody>
-                        {concepts.map((c) => (
+                        {filteredConcepts.map((c) => (
                           <tr
                             key={c.id}
                             style={{ borderTop: "1px solid #EFEDE3", cursor: "pointer" }}
@@ -696,14 +724,8 @@ export default function App() {
                             <td style={{ padding: "10px 14px 10px 0", fontSize: 13.5, color: "#4C4A3E", whiteSpace: "nowrap" }}>{c.plannedOrgForPOC || "—"}</td>
                             <td style={{ padding: "10px 14px 10px 0", whiteSpace: "nowrap" }}><StatusPill statusKey={c.status} /></td>
                             <td style={{ padding: "10px 14px 10px 0", fontSize: 13.5, color: "#4C4A3E", whiteSpace: "nowrap" }}>{c.eta || "—"}</td>
-                            <td style={{ padding: "10px 14px 10px 0", whiteSpace: "nowrap" }}>
-                              <span style={{
-                                fontSize: 12, fontWeight: 600, padding: "3px 9px", borderRadius: 20,
-                                background: c.requiresSensor === "Yes" ? "#B4530914" : "#8A877614",
-                                color: c.requiresSensor === "Yes" ? "#B45309" : "#6B6858",
-                              }}>{c.requiresSensor || "No"}</span>
-                            </td>
-                            <td style={{ padding: "10px 14px 10px 0", fontSize: 13.5, fontWeight: 600, whiteSpace: "nowrap" }}>{currency(expenseTotals[c.id] || 0)}</td>
+                            <td style={{ padding: "10px 14px 10px 0", fontSize: 13.5, color: "#4C4A3E", whiteSpace: "nowrap" }}>{c.requiresSensor || "No"}</td>
+                            <td style={{ padding: "10px 14px 10px 0", fontSize: 13.5, fontWeight: 600, whiteSpace: "nowrap" }}>{currency(filteredExpenseTotals[c.id] || 0)}</td>
                           </tr>
                         ))}
                       </tbody>
