@@ -446,7 +446,7 @@ export default function App() {
   const domainBreakdown = useMemo(() => {
     const map = {};
     for (const c of concepts) {
-      const key = c.domain || "Unspecified";
+      const key = (c.domain || "Unspecified").trim();
       if (!map[key]) map[key] = { domain: key, count: 0, spend: 0 };
       map[key].count += 1;
       map[key].spend += expenseTotals[c.id] || 0;
