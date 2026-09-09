@@ -87,6 +87,13 @@ app.post("/api/expenses", async (req, res) => {
   try {
     await backup();
     const body = req.body || {};
+    if (Array.isArray(body)) {
+      for (const record of body) {
+        await insert("expenses", { ...record, id: record.id || "e-" + Math.random().toString(36).slice(2, 9) });
+      }
+      res.json(body);
+      return;
+    }
     const record = {
       id: body.id || "e-" + Math.random().toString(36).slice(2, 9),
       ...body,

@@ -153,6 +153,21 @@ runServerTests("Expenses API", () => {
     expect(Array.isArray(res.data)).toBe(true);
   });
 
+  it("POST /api/expenses accepts full array without creating blank rows", async () => {
+    const expenses = await request("GET", "/api/expenses");
+    const beforeCount = expenses.data.length;
+
+    const post = await request("POST", "/api/expenses", expenses.data);
+    expect(post.status).toBe(200);
+    expect(Array.isArray(post.data)).toBe(true);
+
+    const after = await request("GET", "/api/expenses");
+    expect(after.data.length).toBe(beforeCount);
+
+    const blankRows = after.data.filter((e) => !e.description || e.description.trim() === "");
+    expect(blankRows.length).toBe(0);
+  });
+
   it("POST /api/expenses creates and updates records", async () => {
     const expenses = await request("GET", "/api/expenses");
     const beforeCount = expenses.data.length;
