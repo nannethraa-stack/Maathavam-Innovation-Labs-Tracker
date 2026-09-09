@@ -39,7 +39,7 @@ function patentBucket(status) {
 const WHEEL_COLORS = ["#1D4E5F", "#0F766E", "#B45309", "#8B7355", "#6B7280", "#15803D", "#7C3AED", "#B42318"];
 
 function currency(n) {
-  return "₹" + n.toLocaleString("en-IN");
+  return "₹" + (n || 0).toLocaleString("en-IN");
 }
 
 function formatSize(bytes) {
