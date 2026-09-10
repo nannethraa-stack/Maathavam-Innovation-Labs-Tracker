@@ -24,7 +24,7 @@ app.get("/api/health", async (req, res) => {
     const expenses = await all("expenses");
     res.json({ concepts: concepts.length, expenses: expenses.length, sample: concepts.slice(0, 3) });
   } catch (err) {
-    res.status(500).json({ error: "Failed to load health" });
+    res.status(500).json({ error: "Failed to load health" }); 
   }
 });
 
