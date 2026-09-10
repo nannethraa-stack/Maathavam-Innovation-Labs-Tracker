@@ -45,7 +45,8 @@ async function init() {
       amount REAL,
       source TEXT,
       paidBy TEXT,
-      date TEXT
+      date TEXT,
+      artifacts TEXT
     )`);
 
     await client.query(`CREATE INDEX IF NOT EXISTS idx_expenses_conceptId ON expenses(conceptId)`);
