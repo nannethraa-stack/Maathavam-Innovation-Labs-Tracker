@@ -53,7 +53,15 @@ export async function all(table) {
   const result = await pool.query(`SELECT * FROM ${table}`);
   return result.rows.map((r) => ({
     ...r,
-    artifacts: r.artifacts ? JSON.parse(r.artifacts) : [],
+    artifacts: (() => {
+      if (!r.artifacts) return [];
+      if (typeof r.artifacts !== "string") return r.artifacts;
+      try {
+        return JSON.parse(r.artifacts);
+      } catch {
+        return [];
+      }
+    })(),
   }));
 }
 
@@ -63,7 +71,15 @@ export async function get(table, id) {
   if (!row) return null;
   return {
     ...row,
-    artifacts: row.artifacts ? JSON.parse(row.artifacts) : [],
+    artifacts: (() => {
+      if (!row.artifacts) return [];
+      if (typeof row.artifacts !== "string") return row.artifacts;
+      try {
+        return JSON.parse(row.artifacts);
+      } catch {
+        return [];
+      }
+    })(),
   };
 }
 

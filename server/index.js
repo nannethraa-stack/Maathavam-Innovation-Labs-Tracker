@@ -64,7 +64,12 @@ app.post("/api/concepts", async (req, res) => {
     const body = req.body || {};
     if (Array.isArray(body)) {
       for (const record of body) {
-        await insert("concepts", { ...record, artifacts: JSON.stringify(record.artifacts || []) });
+        const artifacts = record.artifacts
+          ? typeof record.artifacts === "string"
+            ? record.artifacts
+            : JSON.stringify(record.artifacts)
+          : "[]";
+        await insert("concepts", { ...record, artifacts });
       }
       res.json(body);
       return;
