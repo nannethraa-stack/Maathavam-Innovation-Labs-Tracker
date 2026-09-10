@@ -70,10 +70,10 @@ app.post("/api/concepts", async (req, res) => {
       return;
     }
     const record = {
+      ...body,
       id: body.id || "c-" + Math.random().toString(36).slice(2, 9),
       createdAt: body.createdAt || new Date().toISOString().slice(0, 10),
       artifacts: JSON.stringify(body.artifacts || []),
-      ...body,
     };
     await insert("concepts", record);
     res.json({ ...record, artifacts: body.artifacts || [] });
