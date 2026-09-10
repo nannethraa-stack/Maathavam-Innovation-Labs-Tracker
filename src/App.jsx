@@ -181,6 +181,86 @@ const inputStyle = {
   color: "#1B1F2A", background: "#fff", boxSizing: "border-box", outline: "none"
 };
 
+function UpdatesSection({ conceptId }) {
+  const [updates, setUpdates] = useState([]);
+  const [newContent, setNewContent] = useState("");
+  const [newType, setNewType] = useState("comment");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(`/api/concepts/${conceptId}/updates`)
+      .then((r) => r.json())
+      .then((data) => {
+        setUpdates(data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, [conceptId]);
+
+  const addUpdate = async () => {
+    if (!newContent.trim()) return;
+    const res = await fetch(`/api/concepts/${conceptId}/updates`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ content: newContent.trim(), type: newType }),
+    });
+    const saved = await res.json();
+    setUpdates((prev) => [saved, ...prev]);
+    setNewContent("");
+  };
+
+  if (loading) return <div style={{ padding: 12, color: "#8A8776" }}>Loading updates…</div>;
+
+  return (
+    <div style={{ marginTop: 24, paddingTop: 24, borderTop: "1px solid #E5E2D9" }}>
+      <h3 style={{ fontSize: 14.5, fontWeight: 600, marginBottom: 12 }}>Comments & Updates</h3>
+      <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
+        <select value={newType} onChange={(e) => setNewType(e.target.value)} style={{ ...inputStyle, width: 140 }}>
+          <option value="comment">Comment</option>
+          <option value="update">Update</option>
+          <option value="decision">Decision</option>
+          <option value="issue">Issue</option>
+        </select>
+        <input
+          style={{ ...inputStyle, flex: 1 }}
+          value={newContent}
+          onChange={(e) => setNewContent(e.target.value)}
+          placeholder="Add a comment or update…"
+        />
+        <button onClick={addUpdate} style={btnPrimary} disabled={!newContent.trim()}>Add</button>
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        {updates.length === 0 ? (
+          <div style={{ color: "#8A8776", fontSize: 13, padding: 8 }}>No comments or updates yet.</div>
+        ) : (
+          updates.map((u) => (
+            <div
+              key={u.id}
+              style={{
+                background: "#FAFAF5",
+                border: "1px solid #E5E2D9",
+                borderRadius: 8,
+                padding: "12px 14px",
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+                <span style={{
+                  fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.3,
+                  color: u.type === "decision" ? "#1D4E5F" : u.type === "issue" ? "#B42318" : "#6B6858",
+                  background: u.type === "decision" ? "#1D4E5F14" : u.type === "issue" ? "#B4231814" : "#F3F1EA",
+                  padding: "2px 8", borderRadius: 12,
+                }}>{u.type}</span>
+                <span style={{ fontSize: 12, color: "#8A8776" }}>{u.createdAt}</span>
+              </div>
+              <div style={{ fontSize: 13.5, color: "#1B1F2A", whiteSpace: "pre-wrap" }}>{u.content}</div>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
+
 function ConceptForm({ initial, onSave, onCancel }) {
   const [name, setName] = useState(initial?.name || "");
   const [description, setDescription] = useState(initial?.description || "");
@@ -303,6 +383,10 @@ function ConceptForm({ initial, onSave, onCancel }) {
           </div>
         )}
       </Field>
+
+      {initial && (
+        <UpdatesSection conceptId={initial.id} />
+      )}
 
       <div style={{ display: "flex", gap: 10, marginTop: 20, justifyContent: "flex-end" }}>
         <button onClick={onCancel} style={btnGhost}>Cancel</button>

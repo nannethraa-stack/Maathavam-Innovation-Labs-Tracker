@@ -88,6 +88,38 @@ app.post("/api/concepts", async (req, res) => {
   }
 });
 
+app.get("/api/concepts/:id/updates", async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT * FROM concept_updates WHERE conceptId = $1 ORDER BY createdAt DESC`,
+      [req.params.id]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Failed to load concept updates:", err);
+    res.status(500).json({ error: "Failed to load concept updates" });
+  }
+});
+
+app.post("/api/concepts/:id/updates", async (req, res) => {
+  try {
+    await backup();
+    const body = req.body || {};
+    const record = {
+      id: "u-" + Math.random().toString(36).slice(2, 9),
+      conceptId: req.params.id,
+      content: body.content || "",
+      type: body.type || "comment",
+      createdAt: new Date().toISOString().slice(0, 10),
+    };
+    await insert("concept_updates", record);
+    res.json(record);
+  } catch (err) {
+    console.error("Failed to save concept update:", err);
+    res.status(500).json({ error: "Failed to save concept update" });
+  }
+});
+
 app.post("/api/expenses", async (req, res) => {
   try {
     await backup();

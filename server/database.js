@@ -28,6 +28,16 @@ async function init() {
       createdAt TEXT
     )`);
 
+    await client.query(`CREATE TABLE IF NOT EXISTS concept_updates (
+      id TEXT PRIMARY KEY,
+      conceptId TEXT,
+      content TEXT,
+      type TEXT,
+      createdAt TEXT
+    )`);
+
+    await client.query(`CREATE INDEX IF NOT EXISTS idx_concept_updates_conceptId ON concept_updates(conceptId)`);
+
     await client.query(`CREATE TABLE IF NOT EXISTS expenses (
       id TEXT PRIMARY KEY,
       conceptId TEXT,
