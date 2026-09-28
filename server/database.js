@@ -38,6 +38,9 @@ async function init() {
 
     await client.query(`CREATE INDEX IF NOT EXISTS idx_concept_updates_conceptId ON concept_updates(conceptId)`);
 
+    // Keep existing deployments compatible while adding edit timestamps.
+    await client.query(`ALTER TABLE concept_updates ADD COLUMN IF NOT EXISTS updatedAt TEXT`);
+
     await client.query(`CREATE TABLE IF NOT EXISTS expenses (
       id TEXT PRIMARY KEY,
       conceptId TEXT,
