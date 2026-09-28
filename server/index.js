@@ -91,7 +91,7 @@ app.post("/api/concepts", async (req, res) => {
 app.get("/api/concepts/:id/updates", async (req, res) => {
   try {
     const result = await pool.query(
-      `SELECT * FROM concept_updates WHERE conceptId = $1 ORDER BY createdAt DESC`,
+      `SELECT * FROM concept_updates WHERE conceptId = $1 ORDER BY COALESCE(updatedAt, createdAt) DESC`,
       [req.params.id]
     );
     res.json(result.rows);
@@ -117,6 +117,44 @@ app.post("/api/concepts/:id/updates", async (req, res) => {
   } catch (err) {
     console.error("Failed to save concept update:", err);
     res.status(500).json({ error: "Failed to save concept update" });
+  }
+});
+
+app.put("/api/concepts/:id/updates/:updateId", async (req, res) => {
+  try {
+    await backup();
+    const body = req.body || {};
+    const content = typeof body.content === "string" ? body.content.trim() : "";
+    const type = ["comment", "update", "decision", "issue"].includes(body.type) ? body.type : "comment";
+
+    if (!content) {
+      res.status(400).json({ error: "Comment content is required" });
+      return;
+    }
+
+    const existing = await query(
+      `SELECT * FROM concept_updates WHERE id = $1 AND conceptId = $2`,
+      [req.params.updateId, req.params.id]
+    );
+
+    if (existing.rows.length === 0) {
+      res.status(404).json({ error: "Comment or update not found" });
+      return;
+    }
+
+    const updatedAt = new Date().toISOString();
+    const result = await query(
+      `UPDATE concept_updates
+       SET content = $1, type = $2, updatedAt = $3
+       WHERE id = $4 AND conceptId = $5
+       RETURNING *`,
+      [content, type, updatedAt, req.params.updateId, req.params.id]
+    );
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error("Failed to update concept update:", err);
+    res.status(500).json({ error: "Failed to update concept update" });
   }
 });
 
