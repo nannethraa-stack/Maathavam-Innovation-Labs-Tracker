@@ -146,6 +146,40 @@ runServerTests("Concepts API", () => {
   });
 });
 
+runServerTests("Concept updates API", () => {
+  it("can create and edit a comment without creating a second row", async () => {
+    const concepts = await request("GET", "/api/concepts");
+    const conceptId = concepts.data[0]?.id;
+    expect(conceptId).toBeDefined();
+
+    const before = await request("GET", `/api/concepts/${conceptId}/updates`);
+    const beforeCount = before.data.length;
+
+    const post = await request("POST", `/api/concepts/${conceptId}/updates`, {
+      content: "Test comment before edit",
+      type: "comment",
+    });
+    expect(post.status).toBe(200);
+    expect(post.data.id).toBeDefined();
+
+    const edit = await request("PUT", `/api/concepts/${conceptId}/updates/${post.data.id}`, {
+      content: "Test comment after edit",
+      type: "update",
+    });
+    expect(edit.status).toBe(200);
+    expect(edit.data.id).toBe(post.data.id);
+    expect(edit.data.content).toBe("Test comment after edit");
+    expect(edit.data.type).toBe("update");
+    expect(edit.data.updatedAt).toBeDefined();
+
+    const after = await request("GET", `/api/concepts/${conceptId}/updates`);
+    expect(after.data.length).toBe(beforeCount + 1);
+    expect(after.data.find((u) => u.id === post.data.id).content).toBe("Test comment after edit");
+
+    await request("DELETE", `/api/concepts/${conceptId}/updates/${post.data.id}`);
+  });
+});
+
 runServerTests("Expenses API", () => {
   it("GET /api/expenses returns array", async () => {
     const res = await request("GET", "/api/expenses");
