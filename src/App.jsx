@@ -185,13 +185,17 @@ function UpdatesSection({ conceptId }) {
   const [updates, setUpdates] = useState([]);
   const [newContent, setNewContent] = useState("");
   const [newType, setNewType] = useState("comment");
+  const [editingId, setEditingId] = useState(null);
+  const [editingContent, setEditingContent] = useState("");
+  const [editingType, setEditingType] = useState("comment");
+  const [savingId, setSavingId] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch(`/api/concepts/${conceptId}/updates`)
       .then((r) => r.json())
       .then((data) => {
-        setUpdates(data);
+        setUpdates(Array.isArray(data) ? data : []);
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -204,9 +208,47 @@ function UpdatesSection({ conceptId }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ content: newContent.trim(), type: newType }),
     });
+    if (!res.ok) return;
     const saved = await res.json();
     setUpdates((prev) => [saved, ...prev]);
     setNewContent("");
+  };
+
+  const startEditing = (update) => {
+    setEditingId(update.id);
+    setEditingContent(update.content || "");
+    setEditingType(update.type || "comment");
+  };
+
+  const cancelEditing = () => {
+    setEditingId(null);
+    setEditingContent("");
+    setEditingType("comment");
+  };
+
+  const saveEdit = async (updateId) => {
+    if (!editingContent.trim()) return;
+    setSavingId(updateId);
+    try {
+      const res = await fetch(`/api/concepts/${conceptId}/updates/${updateId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: editingContent.trim(), type: editingType }),
+      });
+      if (!res.ok) return;
+      const saved = await res.json();
+      setUpdates((prev) => {
+        const next = prev.map((u) => (u.id === updateId ? saved : u));
+        return next.sort((a, b) => {
+          const aTime = new Date(a.updatedAt || a.createdAt).getTime();
+          const bTime = new Date(b.updatedAt || b.createdAt).getTime();
+          return bTime - aTime;
+        });
+      });
+      cancelEditing();
+    } finally {
+      setSavingId(null);
+    }
   };
 
   if (loading) return <div style={{ padding: 12, color: "#8A8776" }}>Loading updates…</div>;
@@ -226,6 +268,12 @@ function UpdatesSection({ conceptId }) {
           value={newContent}
           onChange={(e) => setNewContent(e.target.value)}
           placeholder="Add a comment or update…"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              addUpdate();
+            }
+          }}
         />
         <button onClick={addUpdate} style={btnPrimary} disabled={!newContent.trim()}>Add</button>
       </div>
@@ -243,16 +291,51 @@ function UpdatesSection({ conceptId }) {
                 padding: "12px 14px",
               }}
             >
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                <span style={{
-                  fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.3,
-                  color: u.type === "decision" ? "#1D4E5F" : u.type === "issue" ? "#B42318" : "#6B6858",
-                  background: u.type === "decision" ? "#1D4E5F14" : u.type === "issue" ? "#B4231814" : "#F3F1EA",
-                  padding: "2px 8", borderRadius: 12,
-                }}>{u.type}</span>
-                <span style={{ fontSize: 12, color: "#8A8776" }}>{u.createdAt}</span>
-              </div>
-              <div style={{ fontSize: 13.5, color: "#1B1F2A", whiteSpace: "pre-wrap" }}>{u.content}</div>
+              {editingId === u.id ? (
+                <>
+                  <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
+                    <select value={editingType} onChange={(e) => setEditingType(e.target.value)} style={{ ...inputStyle, width: 140 }}>
+                      <option value="comment">Comment</option>
+                      <option value="update">Update</option>
+                      <option value="decision">Decision</option>
+                      <option value="issue">Issue</option>
+                    </select>
+                    <span style={{ alignSelf: "center", fontSize: 12, color: "#8A8776" }}>Editing saved entry</span>
+                  </div>
+                  <textarea
+                    autoFocus
+                    style={{ ...inputStyle, minHeight: 80, resize: "vertical", marginBottom: 8 }}
+                    value={editingContent}
+                    onChange={(e) => setEditingContent(e.target.value)}
+                  />
+                  <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
+                    <button onClick={cancelEditing} style={btnGhost}>Cancel</button>
+                    <button onClick={() => saveEdit(u.id)} style={btnPrimary} disabled={!editingContent.trim() || savingId === u.id}>
+                      {savingId === u.id ? "Saving…" : "Save edit"}
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div style={{ display: "flex", justifyContent: "space-between", gap: 10, marginBottom: 6 }}>
+                    <span style={{
+                      fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.3,
+                      color: u.type === "decision" ? "#1D4E5F" : u.type === "issue" ? "#B42318" : "#6B6858",
+                      background: u.type === "decision" ? "#1D4E5F14" : u.type === "issue" ? "#B4231814" : "#F3F1EA",
+                      padding: "2px 8", borderRadius: 12,
+                    }}>{u.type}</span>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <span style={{ fontSize: 12, color: "#8A8776" }}>
+                        {u.updatedAt ? `Edited ${u.updatedAt}` : u.createdAt}
+                      </span>
+                      <IconBtn onClick={() => startEditing(u)} title="Edit comment or update">
+                        <Pencil size={13} />
+                      </IconBtn>
+                    </div>
+                  </div>
+                  <div style={{ fontSize: 13.5, color: "#1B1F2A", whiteSpace: "pre-wrap" }}>{u.content}</div>
+                </>
+              )}
             </div>
           ))
         )}
@@ -260,7 +343,6 @@ function UpdatesSection({ conceptId }) {
     </div>
   );
 }
-
 function ConceptForm({ initial, onSave, onCancel }) {
   const [name, setName] = useState(initial?.name || "");
   const [description, setDescription] = useState(initial?.description || "");
